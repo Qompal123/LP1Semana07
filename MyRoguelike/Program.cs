@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Dynamic;
 using System.Xml.XPath;
 
@@ -102,8 +103,23 @@ namespace MyRoguelike
             }
         }
 
+        public void TakeDamage(float damage)
+        {
+            health -= damage;
+            if (health < 0)
+            {
+                health = 0;
+            }
 
-
-    
+            int damageRound = Convert.ToInt32(damage);
+            XP += damageRound / 20;
+        }
+        
+        public Hero(string name)
+        {
+            this.name = name;
+            this.xp = 0;
+            this.health = 100;
+        }
     }
 }
