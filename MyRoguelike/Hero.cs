@@ -1,64 +1,40 @@
-using System;
-using System.Data;
-using System.Dynamic;
-using System.Runtime.CompilerServices;
-using System.Xml.XPath;
-
 namespace MyRoguelike
 {
     public class Hero
     {
         private int xp;
-
         private float health;
-
-
-
-        public readonly string Name;
-
+        private readonly string name;
+        public string Name => name;
+        
         public int XP
         {
-            get 
-            {
-                return xp;
-            }
+            get => xp;
             set
             {
-                xp = value;
-            }
-        }
-
-        public int Level
-        {
-            get
-            {
-                return 1 + xp / 1000;
-            }
-        }
-
-        public int MaxHealth
-        {
-            get
-            {
-                return 100 + (Level - 1) * 20;
-            }
-        }
-
-        public int Health
-        {
-            get
-            {
-                return (int)health;
-            }
-            set
-            {
-                if (value > MaxHealth)
+                if (value > xp)
                 {
-                    health = MaxHealth;
+                    xp = value;
                 }
-                else if (value < 0)
+            }
+        }
+
+        public int Level =>(XP / 1000) + 1;
+
+        public float MaxHealth => 100 + (Level - 1) * 20;
+
+        public float Health
+        {
+            get => health;
+            set
+            {
+                if (value < 0)
                 {
                     health = 0;
+                }
+                else if (value > MaxHealth)
+                {
+                    health = MaxHealth;
                 }
                 else
                 {
@@ -69,23 +45,21 @@ namespace MyRoguelike
 
         public void TakeDamage(float damage)
         {
-            int damageRound = Convert.ToInt32(damage);
-
-            Health -= damageRound;
-
-            if (Health < 0)
+            if (damage < 0)
             {
-                Health = 0;
+                return;
             }
+            Health -= damage;
+            XP += (int)(damage / 20); 
 
-            XP += damageRound / 20;
         }
-        
+
         public Hero(string name)
         {
-            this.Name = name;
+            this.name = name;
             this.xp = 0;
-            this.Health = MaxHealth;
+            this.health = MaxHealth;
         }
+
     }
 }
