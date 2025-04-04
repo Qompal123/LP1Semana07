@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Dynamic;
+using System.Runtime.CompilerServices;
 using System.Xml.XPath;
 
 namespace MyRoguelike
@@ -55,11 +56,11 @@ namespace MyRoguelike
 
         private float health;
 
-        private string name;
 
-        private readonly string Name => name;
 
-        private int XP
+        public readonly string Name;
+
+        public int XP
         {
             get 
             {
@@ -67,59 +68,68 @@ namespace MyRoguelike
             }
             set
             {
-                xp++;
+                xp = value;
             }
         }
 
-        private readonly int Level
+        public int Level
         {
             get
             {
-                return Level;
-            }
-
-            set
-            {
-                Level = 1 + xp / 1000;
+                return 1 + xp / 1000;
             }
         }
 
-        private int MaxHealth
+        public int MaxHealth
         {
             get
             {
-                return MaxHealth;
+                return 100 + (Level - 1) * 20;
+            }
+        }
+
+        public int Health
+        {
+            get
+            {
+                return (int)health;
             }
             set
             {
-                if (health > MaxHealth)
+                if (value > MaxHealth)
                 {
                     health = MaxHealth;
                 }
-                else if (health < 0)
+                else if (value < 0)
                 {
                     health = 0;
+                }
+                else
+                {
+                    health = value;
                 }
             }
         }
 
         public void TakeDamage(float damage)
         {
-            health -= damage;
-            if (health < 0)
+            int damageRound = Convert.ToInt32(damage);
+
+            Health -= damageRound;
+
+            if (Health < 0)
             {
-                health = 0;
+                Health = 0;
             }
 
-            int damageRound = Convert.ToInt32(damage);
             XP += damageRound / 20;
         }
         
         public Hero(string name)
         {
-            this.name = name;
+            this.Name = name;
             this.xp = 0;
-            this.health = 100;
+            this.Health = MaxHealth;
         }
     }
 }
